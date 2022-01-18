@@ -29,27 +29,20 @@ class PostController extends Controller
     public function create(Request $request)
     {
         //
+        $upload_image = $request->file('image')->store('uploads/images');
+        $upload_thumbnail = $request->file('thumbnail')->store('uploads/thumbnails');
         $post = Post::create([
             "title" => $request->title,
             "author_id" => $request->author_id,
-            "image" => $request->image,
-            "thumbnail" => $request->thumbnail,
+            "image" => asset("storage/{$upload_image}"),
+            "thumbnail" => asset("storage/{$upload_thumbnail}"),
             "publish_time" => $request->publish_time,
             "body" => $request->body,
         ]);
         return "Successfuly added!";
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+
 
     /**
      * Display the specified resource.
@@ -84,17 +77,7 @@ class PostController extends Controller
         return "successfuly updated";
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    /*public function update(Request $request, $id)
-    {
-        //
-    }*/
+
 
     /**
      * Remove the specified resource from storage.
