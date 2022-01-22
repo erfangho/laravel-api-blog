@@ -9,7 +9,8 @@ use Facade\FlareClient\Http\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Illuminate\Support\Facades\File;
-use DateTime;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Carbon\Carbon;
 
 
 class PostController extends Controller
@@ -29,7 +30,7 @@ class PostController extends Controller
     }
 
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
 
         //
@@ -43,7 +44,14 @@ class PostController extends Controller
             return $validator->errors();
         }
 
-        $dt = new DateTime();
+        // basic web token
+        // jwt
+        // cookie authentication
+
+
+        // now()
+        // today()
+        // Carbon
 
         $upload_image = $request->file('image')->store('uploads/images');
         $upload_thumbnail = $request->file('thumbnail')->store('uploads/thumbnails');
@@ -53,7 +61,7 @@ class PostController extends Controller
             "author_id" => $request->author_id,
             "image" => asset("storage/{$upload_image}"),
             "thumbnail" => asset("storage/{$upload_thumbnail}"),
-            "publish_time" => $dt->format('Y-m-d H:i:s'),
+            "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
             "body" => $request->body,
         ]);
 
@@ -67,12 +75,14 @@ class PostController extends Controller
     {
         //
         $post = Post::find($id);
+        // findOrFail
+        // Route binding
         return response()->json($post, HttpFoundationResponse::HTTP_OK);
 
     }
 
 
-    public function edit(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
@@ -83,38 +93,44 @@ class PostController extends Controller
         if ($validator->fails()) {
             return $validator->errors();
         }
+        try
+        {
+            $post = Post::findOrFail($id);
+            $upload_image = $request->file('image')->store('uploads/images');
+            $upload_thumbnail = $request->file('thumbnail')->store('uploads/thumbnails');
+            File::delete("storage/uploads/images/".basename($post->image));
+            File::delete("storage/uploads/thumbnails/".basename($post->thumbnail));
+            $post->title = $request->title;
+            $post->image = asset("storage/{$upload_image}");
+            $post->thumbnail  = asset("storage/{$upload_thumbnail}");
+            $post->body  = $request->body;
+            $post->save();
+            return Response()->json(["message" => "Post edited successfully."], HttpFoundationResponse::HTTP_OK);
 
+        } catch(ModelNotFoundException $e) {
+            return Response()->json(["message" => $e->getMessage()], HttpFoundationResponse::HTTP_NOT_FOUND);
+        }
 
-        $post = Post::find($id);
-
-        $upload_image = $request->file('image')->store('uploads/images');
-        $upload_thumbnail = $request->file('thumbnail')->store('uploads/thumbnails');
-
-        File::delete("storage/uploads/images/".basename($post->image));
-        File::delete("storage/uploads/thumbnails/".basename($post->thumbnail));
-
-        $post->title = $request->title;
-        $post->image = asset("storage/{$upload_image}");
-        $post->thumbnail  = asset("storage/{$upload_thumbnail}");
-        $post->body  = $request->body;
-        $post->save();
-
-        return Response()->json(["message" => "Post succesfully updated."], HttpFoundationResponse::HTTP_OK);
     }
 
 
 
 
-    public function delete($id)
+    public function destroy($id)
     {
-        //
-        $post = Post::find($id);
 
-        File::delete("storage/uploads/images/".basename($post->image));
-        File::delete("storage/uploads/thumbnails/".basename($post->thumbnail));
-
-        $post->delete();
-
-        return Response()->json(["message" => "Post succesfully deleted."], HttpFoundationResponse::HTTP_OK);
+        try
+        {
+            $user = Post::findOrFail($id);
+            $post = Post::find($id);
+            File::delete("storage/uploads/images/".basename($post->image));
+            File::delete("storage/uploads/thumbnails/".basename($post->thumbnail));
+            $post->delete();
+            return Response()->json(["message" => "Post succesfully deleted."], HttpFoundationResponse::HTTP_OK);
+        }
+        catch(ModelNotFoundException $e)
+        {
+            return Response()->json(["message" => $e->getMessage()], HttpFoundationResponse::HTTP_NOT_FOUND);
+        }
     }
 }

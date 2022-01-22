@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PostController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,14 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/login', [App\Http\Controllers\AuthController::class],'login');
 
 
-Route::prefix('posts')->group(function () {
-    Route::get('/', [App\Http\Controllers\PostController::class, 'index']);
-    Route::get('/{post}', [App\Http\Controllers\PostController::class, 'show']);
-    Route::post('/', [App\Http\Controllers\PostController::class, 'create']);
-    Route::put('/{post}', [App\Http\Controllers\PostController::class, 'edit']);
-    Route::delete('/{post}',  [App\Http\Controllers\PostController::class, 'delete']);
-
-});
+Route::resource('posts', App\Http\Controllers\PostController::class)->except(['create','edit']);
