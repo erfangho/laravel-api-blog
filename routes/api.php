@@ -19,15 +19,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/test', function (Request $request) {
-    return "hello";
-});
+Route::get('/login', [App\Http\Controllers\AuthController::class],'login');
 
 
 Route::prefix('posts')->group(function () {
     Route::get('/', [App\Http\Controllers\PostController::class, 'index']);
-    Route::post('/create', [App\Http\Controllers\PostController::class, 'create']);
-    Route::post('/edit/{post}', [App\Http\Controllers\PostController::class, 'edit']);
-    Route::get('/delete/{post}',  [App\Http\Controllers\PostController::class, 'delete']);
-    Route::get('/show/{post}', [App\Http\Controllers\PostController::class, 'show']);
+    Route::get('/{post}', [App\Http\Controllers\PostController::class, 'show']);
+    Route::post('/', [App\Http\Controllers\PostController::class, 'create']);
+    Route::put('/{post}', [App\Http\Controllers\PostController::class, 'edit']);
+    Route::delete('/{post}',  [App\Http\Controllers\PostController::class, 'delete']);
+
 });

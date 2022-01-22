@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Facade\FlareClient\Http\Response;
@@ -10,20 +11,38 @@ use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Illuminate\Support\Facades\File;
 use DateTime;
 
+
 class PostController extends Controller
 {
 
 
+    public function __construct()
+    {
+        // initialize
+        //$this->middleware('auth');
+    }
+
     public function index()
     {
-        $post = Post::all();
-        return response()->json($post, HttpFoundationResponse::HTTP_OK);
+        $posts = Post::all();
+        return response()->json($posts, HttpFoundationResponse::HTTP_OK);
     }
 
 
     public function create(Request $request)
     {
+
         //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'image' => 'image',
+            'thumbnail' => 'image',
+            'body' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
         $dt = new DateTime();
 
         $upload_image = $request->file('image')->store('uploads/images');
@@ -38,7 +57,7 @@ class PostController extends Controller
             "body" => $request->body,
         ]);
 
-        return "Successfuly added!";
+        return Response()->json(["message" => "Post succesfully created."], HttpFoundationResponse::HTTP_OK);
     }
 
 
@@ -47,15 +66,24 @@ class PostController extends Controller
     public function show($id)
     {
         //
-        $posts = Post::where('id', '=', $id)->get();
-        return response()->json($posts, HttpFoundationResponse::HTTP_OK);
+        $post = Post::find($id);
+        return response()->json($post, HttpFoundationResponse::HTTP_OK);
 
     }
 
 
     public function edit(Request $request, $id)
     {
-        $dt = new DateTime();
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'image' => 'image',
+            'thumbnail' => 'image',
+            'body' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $validator->errors();
+        }
+
 
         $post = Post::find($id);
 
@@ -68,11 +96,10 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->image = asset("storage/{$upload_image}");
         $post->thumbnail  = asset("storage/{$upload_thumbnail}");
-        $post->publish_time  = $dt->format('Y-m-d H:i:s');
         $post->body  = $request->body;
         $post->save();
 
-        return "successfuly updated";
+        return Response()->json(["message" => "Post succesfully updated."], HttpFoundationResponse::HTTP_OK);
     }
 
 
@@ -88,6 +115,6 @@ class PostController extends Controller
 
         $post->delete();
 
-        return 'sucess';
+        return Response()->json(["message" => "Post succesfully deleted."], HttpFoundationResponse::HTTP_OK);
     }
 }

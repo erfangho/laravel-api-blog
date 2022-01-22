@@ -28,6 +28,7 @@ class EditPostTable extends Migration
     {
         Schema::table('posts', function (Blueprint $table) {
             //
+            $table->dropForeign('posts_author_users_id_foreign');
         });
     }
 }
