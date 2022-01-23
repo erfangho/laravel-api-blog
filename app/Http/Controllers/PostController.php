@@ -19,8 +19,7 @@ class PostController extends Controller
 
     public function __construct()
     {
-        // initialize
-        //$this->middleware('auth');
+        $this->middleware('auth:api', ['except' => ['index', 'show']]);
     }
 
     public function index()
@@ -44,14 +43,7 @@ class PostController extends Controller
             return $validator->errors();
         }
 
-        // basic web token
-        // jwt
-        // cookie authentication
 
-
-        // now()
-        // today()
-        // Carbon
 
         $upload_image = $request->file('image')->store('uploads/images');
         $upload_thumbnail = $request->file('thumbnail')->store('uploads/thumbnails');
@@ -82,7 +74,7 @@ class PostController extends Controller
     }
 
 
-    public function update(Request $request, Post $post)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
@@ -108,7 +100,7 @@ class PostController extends Controller
             return Response()->json(["message" => "Post edited successfully."], HttpFoundationResponse::HTTP_OK);
 
         } catch(ModelNotFoundException $e) {
-            return Response()->json(["message" => $e->getMessage()], HttpFoundationResponse::HTTP_NOT_FOUND);
+            return Response()->json(["message" => "Post does not exist."], HttpFoundationResponse::HTTP_NOT_FOUND);
         }
 
     }
@@ -130,7 +122,7 @@ class PostController extends Controller
         }
         catch(ModelNotFoundException $e)
         {
-            return Response()->json(["message" => $e->getMessage()], HttpFoundationResponse::HTTP_NOT_FOUND);
+            return Response()->json(["message" => "Post doesnt exist."], HttpFoundationResponse::HTTP_NOT_FOUND);
         }
     }
 }
