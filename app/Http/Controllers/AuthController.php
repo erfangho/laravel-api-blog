@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\SignUpRequest;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Illuminate\Http\Request;
@@ -15,8 +18,9 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login', 'signUp']]);
     }
     //
-    public function signUp(Request $request)
+    public function signUp(SignUpRequest $request)
     {
+        $validated = $request->validated();
         return User::create([
             "name" => $request->name,
             "email" => $request->email,
@@ -26,20 +30,12 @@ class AuthController extends Controller
 
 
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            [
-                'email'    => 'required|email',
-                'password' => 'required|string|min:6',
-            ]
-        );
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), HttpFoundationResponse::HTTP_BAD_REQUEST);
-        }
 
-        if (!$token = $this->guard()->attempt($validator->validated())) {
+        $validated = $request->validated();
+
+        if (!$token = $this->guard()->attempt($validated)) {
             return response()->json(['error' => 'Unauthorized'], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
 
