@@ -30,7 +30,7 @@ Route::group([
     Route::post('login', 'App\Http\Controllers\AuthController@login')->name('login');
     Route::post('logout', 'App\Http\Controllers\AuthController@logout')->name('logout');
     Route::post('refresh', 'App\Http\Controllers\AuthController@refresh')->name('refresh');
-    Route::get('me', 'App\Http\Controllers\AuthController@me')->name('me');
+    Route::post('me', 'App\Http\Controllers\AuthController@me')->name('me');
     Route::post('signup', 'App\Http\Controllers\AuthController@signUp')->name('signup');
 
 

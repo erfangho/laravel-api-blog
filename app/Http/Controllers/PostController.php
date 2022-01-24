@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -32,7 +33,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
 
-        //
+
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:255',
             'image' => 'image',
@@ -45,12 +46,12 @@ class PostController extends Controller
 
 
 
-        $upload_image = $request->file('image')->store('uploads/images');
-        $upload_thumbnail = $request->file('thumbnail')->store('uploads/thumbnails');
+        $upload_image = $request->file('image')->store('uploads/images', 'public');
+        $upload_thumbnail = $request->file('thumbnail')->store('uploads/thumbnails', 'public');
 
         $post = Post::create([
             "title" => $request->title,
-            "author_id" => $request->author_id,
+            "author_id" => auth()->user()->id,
             "image" => asset("storage/{$upload_image}"),
             "thumbnail" => asset("storage/{$upload_thumbnail}"),
             "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
@@ -67,8 +68,6 @@ class PostController extends Controller
     {
         //
         $post = Post::find($id);
-        // findOrFail
-        // Route binding
         return response()->json($post, HttpFoundationResponse::HTTP_OK);
 
     }
@@ -122,6 +121,7 @@ class PostController extends Controller
         }
         catch(ModelNotFoundException $e)
         {
+
             return Response()->json(["message" => "Post doesnt exist."], HttpFoundationResponse::HTTP_NOT_FOUND);
         }
     }
