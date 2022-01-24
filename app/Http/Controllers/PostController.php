@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
+
+use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -30,21 +33,11 @@ class PostController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
 
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
-            'image' => 'image',
-            'thumbnail' => 'image',
-            'body' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors();
-        }
-
-
+        $request->validated();
 
         $upload_image = $request->file('image')->store('uploads/images', 'public');
         $upload_thumbnail = $request->file('thumbnail')->store('uploads/thumbnails', 'public');
@@ -73,17 +66,10 @@ class PostController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255',
-            'image' => 'image',
-            'thumbnail' => 'image',
-            'body' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return $validator->errors();
-        }
+        $request->validated();
+
         try
         {
             $post = Post::findOrFail($id);
