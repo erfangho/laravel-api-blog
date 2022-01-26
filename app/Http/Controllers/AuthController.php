@@ -36,7 +36,7 @@ class AuthController extends Controller
         $validated = $request->validated();
 
         if (!$token = $this->guard()->attempt($validated)) {
-            return response()->json(['error' => 'Unauthorized'], HttpFoundationResponse::HTTP_UNAUTHORIZED);
+            return response()->json(['error' => __("auth.failed")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
 
         return $this->respondWithToken($token);
@@ -48,7 +48,7 @@ class AuthController extends Controller
     {
         $this->guard()->logout();
 
-        return response()->json(['message' => 'User logged out successfully'], HttpFoundationResponse::HTTP_OK);
+        return response()->json(['message' => __("messages.done")], HttpFoundationResponse::HTTP_OK);
 
     }
 
