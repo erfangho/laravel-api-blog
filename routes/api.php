@@ -2,8 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostController;
-use App\Http\Controllers\AuthController;
+use Illuminate\Http\Client\Request as ClientRequest;
+use Illuminate\Support\Facades\App;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -22,20 +23,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group([
 
-    'middleware' => 'api',
+    'middleware' => ['api', 'language'],
     'prefix' => 'auth'
 
 ], function ($router) {
 
-    Route::post('login', 'App\Http\Controllers\AuthController@login')->name('login');
-    Route::post('logout', 'App\Http\Controllers\AuthController@logout')->name('logout');
-    Route::post('refresh', 'App\Http\Controllers\AuthController@refresh')->name('refresh');
-    Route::post('me', 'App\Http\Controllers\AuthController@me')->name('me');
-    Route::post('signup', 'App\Http\Controllers\AuthController@signUp')->name('signup');
+    Route::post('login', 'AuthController@login')->name('login');
+    Route::post('logout', 'AuthController@logout')->name('logout');
+    Route::post('refresh', 'AuthController@refresh')->name('refresh');
+    Route::post('me', 'AuthController@me')->name('me');
+    Route::post('signup', 'AuthController@signUp')->name('signup');
 
 
 });
 
-Route::resource('posts', App\Http\Controllers\PostController::class)->except(['create','edit']);
+Route::resource('posts', PostController::class)->except(['create','edit'])->middleware('language');
+
+
 
 

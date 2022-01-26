@@ -2,11 +2,13 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Facades\App;
 use Closure;
 use Illuminate\Http\Request;
 
 class ChangeLang
 {
+
     /**
      * Handle an incoming request.
      *
@@ -16,7 +18,7 @@ class ChangeLang
      */
     public function handle(Request $request, Closure $next)
     {
-        
+        App::setLocale($request->language);
         return $next($request);
     }
 }
