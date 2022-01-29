@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Post;
 
 
 
@@ -60,8 +60,13 @@ class PostController extends Controller
     public function show($id)
     {
         //
-        $post = Post::find($id);
-        return response()->json($post, HttpFoundationResponse::HTTP_OK);
+        try {
+            $post = Post::findOrFail($id);
+            return response()->json($post, HttpFoundationResponse::HTTP_OK);
+        } catch(ModelNotFoundException $e) {
+        return Response()->json(["message" => __("messages.not_found")], HttpFoundationResponse::HTTP_NOT_FOUND);
+        }
+
 
     }
 
@@ -93,13 +98,12 @@ class PostController extends Controller
 
 
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
 
         try
         {
-            $user = Post::findOrFail($id);
-            $post = Post::find($id);
+            $post = Post::findOrFail($id);
             File::delete("storage/uploads/images/".basename($post->image));
             File::delete("storage/uploads/thumbnails/".basename($post->thumbnail));
             $post->delete();

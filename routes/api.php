@@ -28,16 +28,16 @@ Route::group([
 
 ], function ($router) {
 
-    Route::post('login', 'AuthController@login')->name('login');
-    Route::post('logout', 'AuthController@logout')->name('logout');
-    Route::post('refresh', 'AuthController@refresh')->name('refresh');
-    Route::post('me', 'AuthController@me')->name('me');
-    Route::post('signup', 'AuthController@signUp')->name('signup');
+    Route::post('login', 'Auth\AuthController@login')->name('login');
+    Route::post('logout', 'Auth\AuthController@logout')->name('logout');
+    Route::post('refresh', 'Auth\AuthController@refresh')->name('refresh');
+    Route::post('me', 'Auth\AuthController@me')->name('me');
+    Route::post('signup', 'Auth\AuthController@signUp')->name('signup');
 
 
 });
 
-Route::resource('posts', PostController::class)->except(['create','edit'])->middleware('language');
+Route::resource('posts', Post\PostController::class)->except(['create','edit'])->middleware('language');
 
 
 
