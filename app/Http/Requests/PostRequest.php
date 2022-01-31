@@ -28,7 +28,7 @@ class PostRequest extends FormRequest
     {
         return [
             //
-            'title' => 'required|max:255|string',
+            'title' => 'bail|unique:posts|required|max:255|string',
             'image' => 'image',
             'thumbnail' => 'image',
             'body' => 'required',
