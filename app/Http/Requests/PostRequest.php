@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CheckString;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\Uppercase;
 
 class PostRequest extends FormRequest
 {
@@ -28,7 +30,7 @@ class PostRequest extends FormRequest
     {
         return [
             //
-            'title' => 'bail|unique:posts|required|max:255|string',
+            'title' => ['bail', new CheckString, 'unique:posts', 'required', 'max:255', 'string'],
             'image' => 'image',
             'thumbnail' => 'image',
             'body' => 'required',
