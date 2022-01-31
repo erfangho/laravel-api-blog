@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Post;
 
 
-
+use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
