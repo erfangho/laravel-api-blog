@@ -6,7 +6,8 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
-
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -45,6 +46,10 @@ class Handler extends ExceptionHandler
         $this->renderable(function (AuthenticationException $e) {
             //
             return response()->json(["message" => __('messages.unathorized')], HttpFoundationResponse::HTTP_UNAUTHORIZED);
+        });
+        $this->renderable(function (MethodNotAllowedHttpException $e) {
+            //
+            return response()->json(["message" => 'method not allowed'], HttpFoundationResponse::HTTP_METHOD_NOT_ALLOWED);
         });
     }
 }
