@@ -16,7 +16,7 @@ class IndexFilterRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -30,7 +30,7 @@ class IndexFilterRequest extends FormRequest
             'from' => 'date',
             'to' => 'date|after_or_equal:from',
             'date' => 'date',
-            'author' => 'string'
+            'author_id' => 'integer'
         ];
     }
 
