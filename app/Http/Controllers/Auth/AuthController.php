@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
 use Illuminate\Support\Facades\Auth;
@@ -32,13 +33,10 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-
         $validated = $request->validated();
-
         if (!$token = $this->guard()->attempt($validated)) {
             return response()->json(['error' => __("auth.failed")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
-
         return $this->respondWithToken($token);
     }
 
@@ -47,16 +45,13 @@ class AuthController extends Controller
     public function logout()
     {
         $this->guard()->logout();
-
         return response()->json(['message' => __("messages.done")], HttpFoundationResponse::HTTP_OK);
-
     }
 
 
     public function me()
     {
         return response()->json($this->guard()->user());
-
     }
 
 
@@ -68,7 +63,6 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->respondWithToken($this->guard()->refresh());
-
     }
 
 
