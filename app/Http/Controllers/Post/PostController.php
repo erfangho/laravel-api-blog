@@ -28,27 +28,20 @@ class PostController extends Controller
 
     public function index(IndexFilterRequest $request)
     {
+        $posts = new Post;
+        if($request->has('author_id')){
+            $posts = $posts->where('author_id', $request->author_id);
+        }
         if($request->has('date')){
             $datetime = new Carbon($request->date.' 00:00:00');
-            $posts = Post::whereDate('created_at', $datetime);
-            if($request->has('author_id')){
-                $posts = $posts->where('author_id', $request->author_id);
-            }
-        } elseif($request->has('from')){
+            $posts = $posts->whereDate('created_at', $datetime);
+        }
+        if($request->has('from')){
             $from = new Carbon($request->from.' 00:00:00');
             $to = new Carbon($request->to.' 00:00:00');
-            $posts = Post::whereDate('created_at', '>=', $from)
+            $posts = $posts->whereDate('created_at', '>=', $from)
             ->whereDate('created_at', '<=', $to);
-            if($request->has('author_id')){
-                $posts = $posts->where('author_id', $request->author_id);
-            }
-        } elseif($request->has('author_id')){
-            $posts = Post::where('author_id', $request->author_id);
-        } else {
-            $posts = Post::all();
-            return response()->json($posts, HttpFoundationResponse::HTTP_OK);
         }
-
         return response()->json($posts->get(), HttpFoundationResponse::HTTP_OK);
     }
 
