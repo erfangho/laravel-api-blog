@@ -41,8 +41,7 @@ class PostController extends Controller
 
     public function show($id)
     {
-        $post = Post::findOrFail($id);
-        return response()->json($post, HttpFoundationResponse::HTTP_OK);
+        return $this->repository->showPostById($id);
     }
 
 
@@ -54,10 +53,6 @@ class PostController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $post = Post::findOrFail($id);
-        File::delete("storage/uploads/images/".basename($post->image));
-        File::delete("storage/uploads/thumbnails/".basename($post->thumbnail));
-        $post->delete();
-        return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
+        return $this->repository->deletePostById($id);
     }
 }

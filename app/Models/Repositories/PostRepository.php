@@ -46,7 +46,8 @@ class PostRepository implements PostRepositoryInterface
 
     public function showPostById($id)
     {
-
+        $post = Post::findOrFail($id);
+        return response()->json($post, HttpFoundationResponse::HTTP_OK);
     }
 
     public function updatePostById($id, $data)
@@ -66,7 +67,11 @@ class PostRepository implements PostRepositoryInterface
 
     public function deletePostById($id)
     {
-
+        $post = Post::findOrFail($id);
+        File::delete("storage/uploads/images/".basename($post->image));
+        File::delete("storage/uploads/thumbnails/".basename($post->thumbnail));
+        $post->delete();
+        return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
     }
 }
 
