@@ -12,37 +12,26 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use Facade\FlareClient\Http\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
+
 use Illuminate\Support\Facades\File;
 use Carbon\Carbon;
+use App\Models\Repositories\PostRepositoryInterface;
 use Symfony\Component\Console\Input\Input;
 
 class PostController extends Controller
 {
 
+    private $repository;
 
-    public function __construct()
+    public function __construct(PostRepositoryInterface $userRepository)
     {
         $this->middleware('auth:api', ['except' => ['index', 'show']]);
+        $this->repository = $userRepository;
     }
 
     public function index(IndexFilterRequest $request)
     {
-        $posts = new Post;
-        if($request->has('author_id')){
-            $posts = $posts->where('author_id', $request->author_id);
-        }
-        if($request->has('date')){
-            $datetime = new Carbon($request->date.' 00:00:00');
-            $posts = $posts->whereDate('created_at', $datetime);
-        }
-        if($request->has('from')){
-            $from = new Carbon($request->from.' 00:00:00');
-            $to = new Carbon($request->to.' 00:00:00');
-            $posts = $posts->whereDate('created_at', '>=', $from)
-            ->whereDate('created_at', '<=', $to);
-        }
-        return response()->json($posts->get(), HttpFoundationResponse::HTTP_OK);
+        $this->repository->postFilter($request);
     }
 
 
