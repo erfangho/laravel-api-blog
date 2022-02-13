@@ -30,7 +30,17 @@ class PostRepository implements PostRepositoryInterface
 
     public function createPost($data)
     {
-
+        $upload_image = $data->file('image')->store('uploads/images', 'public');
+        $upload_thumbnail = $data->file('thumbnail')->store('uploads/thumbnails', 'public');
+        $post = Post::create([
+            "title" => $data->title,
+            "author_id" => auth()->user()->id,
+            "image" => asset("storage/{$upload_image}"),
+            "thumbnail" => asset("storage/{$upload_thumbnail}"),
+            "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
+            "body" => $data->body,
+        ]);
+        return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
     }
 
     public function showPostById($id)

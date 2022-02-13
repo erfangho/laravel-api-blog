@@ -31,23 +31,13 @@ class PostController extends Controller
 
     public function index(IndexFilterRequest $request)
     {
-        $this->repository->postFilter($request);
+        return $this->repository->postFilter($request);
     }
 
 
     public function store(PostRequest $request)
     {
-        $upload_image = $request->file('image')->store('uploads/images', 'public');
-        $upload_thumbnail = $request->file('thumbnail')->store('uploads/thumbnails', 'public');
-        $post = Post::create([
-            "title" => $request->title,
-            "author_id" => auth()->user()->id,
-            "image" => asset("storage/{$upload_image}"),
-            "thumbnail" => asset("storage/{$upload_thumbnail}"),
-            "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
-            "body" => $request->body,
-        ]);
-        return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
+        return $this->repository->createPost($request);
     }
 
 
