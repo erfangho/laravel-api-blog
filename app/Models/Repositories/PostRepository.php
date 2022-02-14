@@ -3,6 +3,7 @@
 namespace App\Models\Repositories;
 
 use App\Models\Post;
+use App\Events\PostCreated;
 use App\Models\Repositories\PostRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
@@ -41,6 +42,7 @@ class PostRepository implements PostRepositoryInterface
             "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
             "body" => $data->body,
         ]);
+        event(new PostCreated($post));
         return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
     }
 
