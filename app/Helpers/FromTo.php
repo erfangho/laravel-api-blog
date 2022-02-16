@@ -5,10 +5,12 @@ namespace App\Helpers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class FromTo extends PostFilter
 {
-    public function handle(Post $posts, Request $request)
+    public $final;
+    public function handle($posts, Request $request)
     {
         if($request->has('from')){
             $from = new Carbon($request->from.' 00:00:00');
@@ -16,5 +18,7 @@ class FromTo extends PostFilter
             $posts = $posts->whereDate('created_at', '>=', $from)
             ->whereDate('created_at', '<=', $to);
         }
+
+        $this->final = $posts->get();
     }
 }

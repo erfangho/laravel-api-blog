@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 
 class AuthorId extends PostFilter
 {
-    public function handle(Post $posts, Request $request)
+    public function handle($posts, Request $request)
     {
-        if($posts->has('author_id')){
-            $posts = $posts->where('author_id', $posts->author_id);
+        if($request->has('author_id')){
+            $posts = $posts->where('author_id', $request->author_id);
         }
         $this->next($posts, $request);
     }
