@@ -14,9 +14,6 @@ class PostRepository implements PostRepositoryInterface
     public function postFilter($data)
     {
         $posts = new Post;
-        if($data->has('author_id')){
-            $posts = $posts->where('author_id', $data->author_id);
-        }
         if($data->has('date')){
             $datetime = new Carbon($data->date.' 00:00:00');
             $posts = $posts->whereDate('created_at', $datetime);
