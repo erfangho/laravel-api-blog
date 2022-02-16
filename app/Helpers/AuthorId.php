@@ -9,7 +9,6 @@ class AuthorId extends PostFilter
 {
     public function handle(Post $posts, Request $request)
     {
-        $posts = new Post;
         if($posts->has('author_id')){
             $posts = $posts->where('author_id', $posts->author_id);
         }
