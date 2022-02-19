@@ -3,9 +3,9 @@
 namespace App\Models\Repositories;
 
 use App\Models\Post;
-use App\Helpers\AuthorId;
-use App\Helpers\Date;
-use App\Helpers\FromTo;
+use App\Helpers\Filter\Author;
+use App\Helpers\Filter\Date;
+use App\Helpers\Filter\FromTo;
 use App\Events\PostCreated;
 use App\Models\Repositories\PostRepositoryInterface;
 use Carbon\Carbon;
@@ -17,7 +17,7 @@ class PostRepository implements PostRepositoryInterface
     public function postFilter($data)
     {
         $posts = new Post;
-        $author = new AuthorId();
+        $author = new Author();
         $date = new Date();
         $from = new FromTo();
         $author->setSuccessor($date);

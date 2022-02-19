@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helpers\Filter;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
-class Date extends PostFilter
+class Date extends Filter
 {
     public function handle($posts, Request $request)
     {

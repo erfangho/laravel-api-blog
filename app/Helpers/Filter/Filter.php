@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helpers\Filter;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
 
-abstract class PostFilter
+abstract class Filter
 {
     protected $successor;
 
     public abstract function handle($posts, Request $request);
 
-    public function setSuccessor(PostFilter $successor){
+    public function setSuccessor(Filter $successor){
         $this->successor = $successor;
     }
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helpers\Filter;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
 
-class AuthorId extends PostFilter
+class Author extends Filter
 {
     public function handle($posts, Request $request)
     {
