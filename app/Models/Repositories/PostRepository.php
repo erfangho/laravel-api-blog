@@ -9,6 +9,7 @@ use App\Helpers\Filter\FromTo;
 use App\Events\PostCreated;
 use App\Models\Repositories\PostRepositoryInterface;
 use Carbon\Carbon;
+use App\Services\Upload\ImageUpload;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
@@ -28,13 +29,13 @@ class PostRepository implements PostRepositoryInterface
 
     public function createPost($data)
     {
-        $upload_image = $data->file('image')->store('uploads/images', 'public');
-        $upload_thumbnail = $data->file('thumbnail')->store('uploads/thumbnails', 'public');
+        $upload = new ImageUpload;
+        $upload->store($data);
         $post = Post::create([
             "title" => $data->title,
             "author_id" => auth()->user()->id,
-            "image" => asset("storage/{$upload_image}"),
-            "thumbnail" => asset("storage/{$upload_thumbnail}"),
+            "image" => asset("storage/{$upload->upload_image}"),
+            "thumbnail" => asset("storage/{$upload->upload_thumbnail}"),
             "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
             "body" => $data->body,
         ]);
