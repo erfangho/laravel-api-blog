@@ -52,13 +52,12 @@ class PostRepository implements PostRepositoryInterface
     public function updatePostById($id, $data)
     {
         $post = Post::findOrFail($id);
-        $upload_image = $data->file('image')->store('uploads/images');
-        $upload_thumbnail = $data->file('thumbnail')->store('uploads/thumbnails');
-        File::delete("storage/uploads/images/".basename($post->image));
-        File::delete("storage/uploads/thumbnails/".basename($post->thumbnail));
+        $upload = new ImageUpload;
+        $upload->store($data);
+        $upload->remove($post);
         $post->title = $data->title;
-        $post->image = asset("storage/{$upload_image}");
-        $post->thumbnail  = asset("storage/{$upload_thumbnail}");
+        $post->image = asset("storage/{$upload->upload_image}");
+        $post->thumbnail  = asset("storage/{$upload->upload_thumbnail}");
         $post->body  = $data->body;
         $post->save();
         return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
@@ -67,8 +66,8 @@ class PostRepository implements PostRepositoryInterface
     public function deletePostById($id)
     {
         $post = Post::findOrFail($id);
-        File::delete("storage/uploads/images/".basename($post->image));
-        File::delete("storage/uploads/thumbnails/".basename($post->thumbnail));
+        $upload = new ImageUpload;
+        $upload->remove($post);
         $post->delete();
         return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
     }
