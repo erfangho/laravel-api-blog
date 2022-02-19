@@ -29,8 +29,8 @@ class PostCreatedNotification
     {
         $post = json_encode($event->post, JSON_PRETTY_PRINT);
         Mail::raw($post, function($message) {
-            $message->to('erfan2ghorbani@gmail.com')->subject('Posts created succesfully');
-            $message->from('erfanghorbaniergh@gmail.com','Blog project');
+            $message->to(env('ADMIN_MAIL'))->subject('Posts created succesfully');
+            $message->from(env('MAIL_FROM_ADDRESS'),'Blog project');
          });
     }
 }
