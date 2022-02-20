@@ -9,7 +9,8 @@ use App\Helpers\Filter\FromTo;
 use App\Events\PostCreated;
 use App\Models\Repositories\PostRepositoryInterface;
 use Carbon\Carbon;
-use App\Services\Upload\ImageUpload;
+use App\Services\Upload\Upload;
+use App\Services\Delete\Delete;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
@@ -29,13 +30,13 @@ class PostRepository implements PostRepositoryInterface
 
     public function createPost($data)
     {
-        $upload = new ImageUpload;
-        $upload->store($data);
+        $upload_image = Upload::store($data->file('image'), "image");
+        $upload_thumbnail = Upload::store($data->file('thumbnail'), "thumbnail");
         $post = Post::create([
             "title" => $data->title,
             "author_id" => auth()->user()->id,
-            "image" => asset("storage/{$upload->upload_image}"),
-            "thumbnail" => asset("storage/{$upload->upload_thumbnail}"),
+            "image" => asset('storage/uploads/images/'.$data->file('image')->getClientOriginalName().''),
+            "thumbnail" => asset('storage/uploads/thumbnails/'.$data->file('thumbnail')->getClientOriginalName().''),
             "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
             "body" => $data->body,
         ]);
@@ -52,12 +53,13 @@ class PostRepository implements PostRepositoryInterface
     public function updatePostById($id, $data)
     {
         $post = Post::findOrFail($id);
-        $upload = new ImageUpload;
-        $upload->store($data);
-        $upload->remove($post);
+        $upload_image = Upload::store($data->file('image'), "image");
+        $upload_thumbnail = Upload::store($data->file('thumbnail'), "thumbnail");
+        Delete::remove($post, "image");
+        Delete::remove($post, "thumbnail");
         $post->title = $data->title;
-        $post->image = asset("storage/{$upload->upload_image}");
-        $post->thumbnail  = asset("storage/{$upload->upload_thumbnail}");
+        $post->image = asset('storage/uploads/images/'.$data->file('image')->getClientOriginalName().'');
+        $post->thumbnail  = asset('storage/uploads/thumbnails/'.$data->file('thumbnail')->getClientOriginalName().'');
         $post->body  = $data->body;
         $post->save();
         return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
@@ -66,8 +68,8 @@ class PostRepository implements PostRepositoryInterface
     public function deletePostById($id)
     {
         $post = Post::findOrFail($id);
-        $upload = new ImageUpload;
-        $upload->remove($post);
+        Delete::remove($post, "image");
+        Delete::remove($post, "thumbnail");
         $post->delete();
         return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
     }
