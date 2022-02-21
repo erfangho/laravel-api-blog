@@ -15,11 +15,11 @@ class PostFactory extends Factory
     {
         return [
             //
-            "title" => $this->faker->word(),
+            "title" => $this->faker->word() . ' blog',
             "author_id" => User::all()->random()->id,
             "body" => $this->faker->sentence(),
-            "image" => $this->faker->sentence(),
-            "thumbnail" => $this->faker->sentence(),
+            "image" => $this->faker->imageUrl(),
+            "thumbnail" => $this->faker->imageUrl(),
             "publish_time" => $this->faker->dateTime(),
             "created_at" => $this->faker->dateTime(),
             "updated_at" => $this->faker->dateTime(),
