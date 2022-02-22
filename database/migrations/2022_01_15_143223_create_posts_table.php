@@ -22,7 +22,6 @@ class CreatePostsTable extends Migration
             $table->string('thumbnail');
             $table->datetime('publish_time');
             $table->timestamps();
-            //table->foreign('author_id')->references('id')->on('users');
         });
     }
 
