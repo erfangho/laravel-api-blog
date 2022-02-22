@@ -10,7 +10,6 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-
     private $repository;
 
     public function __construct(PostRepositoryInterface $userRepository)
@@ -24,26 +23,22 @@ class PostController extends Controller
         return $this->repository->postFilter($request);
     }
 
-
     public function store(PostRequest $request)
     {
         return $this->repository->createPost($request);
     }
-
 
     public function show($id)
     {
         return $this->repository->showPostById($id);
     }
 
-
     public function update(PostRequest $request, $id)
     {
         return $this->repository->updatePostById($id, $request);
     }
 
-
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         return $this->repository->deletePostById($id);
     }

@@ -40,12 +40,9 @@ class SendEmails extends Command
      */
     public function handle()
     {
-
         $posts = json_encode(Post::whereDate('created_at', Carbon::today())->get(), JSON_PRETTY_PRINT);
         Mail::raw($posts, function($message) {
             $message->to($this->argument('address'), 'User')->subject('Posts that created today');
-            $message->from('erfanghorbaniergh@gmail.com','Blog project');
-         });
-
+        });
     }
 }
