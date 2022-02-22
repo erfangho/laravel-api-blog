@@ -6,10 +6,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 class AuthController extends Controller
 {
     public function __construct()
@@ -19,7 +19,6 @@ class AuthController extends Controller
 
     public function signUp(SignUpRequest $request)
     {
-        $validated = $request->validated();
         return User::create([
             "name" => $request->name,
             "email" => $request->email,
@@ -29,7 +28,6 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
-        $validated = $request->validated();
         if (!$token = $this->guard()->attempt($validated)) {
             return response()->json(['error' => __("auth.failed")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
