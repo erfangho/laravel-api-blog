@@ -2,10 +2,8 @@
 
 namespace App\Helpers\Filter;
 
-use App\Models\Post;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
+use Illuminate\Http\Request;
 
 class FromTo extends Filter
 {

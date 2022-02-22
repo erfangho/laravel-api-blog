@@ -8,8 +8,6 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 class AuthController extends Controller
@@ -18,7 +16,7 @@ class AuthController extends Controller
     {
         $this->middleware('auth:api', ['except' => ['login', 'signUp']]);
     }
-    //
+
     public function signUp(SignUpRequest $request)
     {
         $validated = $request->validated();
@@ -29,8 +27,6 @@ class AuthController extends Controller
         ]);
     }
 
-
-
     public function login(LoginRequest $request)
     {
         $validated = $request->validated();
@@ -40,20 +36,16 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-
-
     public function logout()
     {
         $this->guard()->logout();
         return response()->json(['message' => __("messages.done")], HttpFoundationResponse::HTTP_OK);
     }
 
-
     public function me()
     {
         return response()->json($this->guard()->user());
     }
-
 
     protected function guard()
     {
@@ -65,16 +57,14 @@ class AuthController extends Controller
         return $this->respondWithToken($this->guard()->refresh());
     }
 
-
     protected function respondWithToken($token)
     {
         return response()->json(
             [
-                'token'          => $token,
-                'token_type'     => 'bearer',
+                'token' => $token,
+                'token_type' => 'bearer',
                 'token_validity' => ($this->guard()->factory()->getTTL() * 60),
             ],
         HttpFoundationResponse::HTTP_OK);
     }
-
 }

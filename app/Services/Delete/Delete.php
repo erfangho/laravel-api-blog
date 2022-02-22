@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Services\Delete;
-
 use Illuminate\Support\Facades\File;
+
 class Delete
 {
     public static function remove($data, $type)

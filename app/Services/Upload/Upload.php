@@ -2,10 +2,8 @@
 
 namespace App\Services\Upload;
 
-use Illuminate\Support\Facades\File;
 class Upload
 {
-
     public static function store($data, $type)
     {
         $fileName = $data->getClientOriginalName();

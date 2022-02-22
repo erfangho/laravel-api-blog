@@ -2,7 +2,6 @@
 
 namespace App\Helpers\Filter;
 
-use App\Models\Post;
 use Illuminate\Http\Request;
 
 class Author extends Filter

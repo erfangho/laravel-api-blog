@@ -2,19 +2,11 @@
 
 namespace App\Http\Controllers\Post;
 
-
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IndexFilterRequest;
 use App\Http\Requests\PostRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\Request;
-use App\Models\Post;
-use Facade\FlareClient\Http\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Carbon\Carbon;
 use App\Models\Repositories\PostRepositoryInterface;
-use Symfony\Component\Console\Input\Input;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
