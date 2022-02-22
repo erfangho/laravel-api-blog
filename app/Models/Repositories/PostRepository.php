@@ -62,7 +62,7 @@ class PostRepository implements PostRepositoryInterface
 
         if(Auth::id() !== $post->author_id)
         {
-                return Response()->json(["message" => __("auth.unathorized")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
+            return Response()->json(["message" => __("auth.unathorized")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
 
         $upload_image = FileUpload::store($data->file('image'), "image");
@@ -83,6 +83,11 @@ class PostRepository implements PostRepositoryInterface
     public function deletePostById($id)
     {
         $post = Post::findOrFail($id);
+
+        if(Auth::id() !== $post->author_id)
+        {
+            return Response()->json(["message" => __("auth.unathorized")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
+        }
 
         FileDelete::remove($post, "image");
         FileDelete::remove($post, "thumbnail");
