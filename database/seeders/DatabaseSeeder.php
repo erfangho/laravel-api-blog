@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,7 +15,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $users = \App\Models\User::factory(10)->create();
-        \App\Models\Post::factory(5)->create();
+        User::factory(5)->create()->each(function ($user){
+            Post::factory(5)->create(['author_id'=>$user->id]);
+        });
     }
 }
