@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Services\Delete;
+namespace App\Services\FileServices;
+
 use Illuminate\Support\Facades\File;
 
-class Delete
+class FileDelete
 {
     public static function remove($data, $type)
     {

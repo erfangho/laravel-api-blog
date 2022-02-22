@@ -8,9 +8,10 @@ use App\Helpers\Filter\Date;
 use App\Helpers\Filter\FromTo;
 use App\Models\Post;
 use App\Models\Repositories\PostRepositoryInterface;
-use App\Services\Delete\Delete;
-use App\Services\Upload\Upload;
+use App\Services\FileServices\FileDelete;
+use App\Services\FileServices\FileUpload;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class PostRepository implements PostRepositoryInterface
@@ -31,8 +32,8 @@ class PostRepository implements PostRepositoryInterface
 
     public function createPost($data)
     {
-        $upload_image = Upload::store($data->file('image'), "image");
-        $upload_thumbnail = Upload::store($data->file('thumbnail'), "thumbnail");
+        $upload_image = FileUpload::store($data->file('image'), "image");
+        $upload_thumbnail = FileUpload::store($data->file('thumbnail'), "thumbnail");
 
         $post = Post::create([
             "title" => $data->title,
@@ -59,11 +60,16 @@ class PostRepository implements PostRepositoryInterface
     {
         $post = Post::findOrFail($id);
 
-        $upload_image = Upload::store($data->file('image'), "image");
-        $upload_thumbnail = Upload::store($data->file('thumbnail'), "thumbnail");
+        if(Auth::id() !== $post->author_id)
+        {
+                return Response()->json(["message" => __("auth.unathorized")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
+        }
 
-        Delete::remove($post, "image");
-        Delete::remove($post, "thumbnail");
+        $upload_image = FileUpload::store($data->file('image'), "image");
+        $upload_thumbnail = FileUpload::store($data->file('thumbnail'), "thumbnail");
+
+        FileDelete::remove($post, "image");
+        FileDelete::remove($post, "thumbnail");
 
         $post->title = $data->title;
         $post->image = asset('storage/uploads/images/'.$data->file('image')->getClientOriginalName().'');
@@ -78,8 +84,8 @@ class PostRepository implements PostRepositoryInterface
     {
         $post = Post::findOrFail($id);
 
-        Delete::remove($post, "image");
-        Delete::remove($post, "thumbnail");
+        FileDelete::remove($post, "image");
+        FileDelete::remove($post, "thumbnail");
 
         $post->delete();
 

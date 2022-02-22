@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Upload;
+namespace App\Services\FileServices;
 
-class Upload
+class FileUpload
 {
     public static function store($data, $type)
     {
