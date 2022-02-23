@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IndexFilterRequest;
-use App\Http\Requests\PostRequest;
+use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Repositories\PostRepositoryInterface;
 
@@ -23,7 +23,7 @@ class PostController extends Controller
         return $this->repository->postFilter($request);
     }
 
-    public function store(PostRequest $request)
+    public function store(StorePostRequest $request)
     {
         return $this->repository->createPost($request);
     }

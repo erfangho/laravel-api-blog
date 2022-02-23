@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
-class PostRequest extends FormRequest
+class StorePostRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
