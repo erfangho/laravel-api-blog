@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Post\PostController;
+use App\Http\Controllers\Auth\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,14 +18,14 @@ Route::group([
     'middleware' => ['api', 'language'],
     'prefix' => 'auth'
 ], function ($router) {
-    Route::post('login', 'Auth\AuthController@login')->name('login');
-    Route::post('logout', 'Auth\AuthController@logout')->name('logout');
-    Route::post('refresh', 'Auth\AuthController@refresh')->name('refresh');
-    Route::post('me', 'Auth\AuthController@me')->name('me');
-    Route::post('signup', 'Auth\AuthController@signUp')->name('signup');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::post('logout',  [AuthController::class, 'logout'])->name('logout');
+    Route::post('refresh',  [AuthController::class, 'refresh'])->name('refresh');
+    Route::post('me',  [AuthController::class, 'login'])->name('me');
+    Route::post('signup',  [AuthController::class, 'signUp'])->name('signup');
 });
 
-Route::resource('posts', Post\PostController::class)->except(['create','edit'])->middleware('language');
+Route::resource('posts', PostController::class)->except(['create','edit'])->middleware('language');
 
 
 

@@ -14,7 +14,7 @@ class PostObserver
      */
     public function deleted(Post $post)
     {
-        $post->title = $post->title . ' _deleted_' . time();
+        $post->title = $post->title . '_deleted_' . time();
         $post->save();
     }
 }
