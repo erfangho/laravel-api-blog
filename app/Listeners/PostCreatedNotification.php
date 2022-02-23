@@ -17,7 +17,7 @@ class PostCreatedNotification
     {
         $post = json_encode($event->post, JSON_PRETTY_PRINT);
         Mail::raw($post, function($message) {
-            $message->to(config('app.admin_mail'))->subject('Posts created succesfully');
+            $message->to(config('const.admin_mail'))->subject('Posts created succesfully');
         });
     }
 }

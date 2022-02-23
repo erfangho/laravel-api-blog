@@ -6,6 +6,7 @@ use App\Rules\CheckString;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class UpdatePostRequest extends FormRequest
@@ -18,7 +19,7 @@ class UpdatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['bail', new CheckString, 'unique:posts', 'max:255', 'string'],
+            'title' => ['bail', new CheckString, Rule::unique('posts')->ignore($this->post), 'max:255', 'string'],
             'image' => 'image',
             'thumbnail' => 'image',
             'body' => 'string',

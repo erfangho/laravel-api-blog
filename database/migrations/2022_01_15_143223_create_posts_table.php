@@ -21,6 +21,7 @@ class CreatePostsTable extends Migration
             $table->string('image');
             $table->string('thumbnail');
             $table->datetime('publish_time');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
