@@ -6,29 +6,31 @@ use App\Events\PostCreated;
 use App\Helpers\Filter\Author;
 use App\Helpers\Filter\Date;
 use App\Helpers\Filter\FromTo;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\Repositories\PostRepositoryInterface;
 use App\Services\FileServices\FileDelete;
 use App\Services\FileServices\FileUpload;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class PostRepository implements PostRepositoryInterface
 {
     public function postFilter($data)
     {
-        $posts = new Post;
-        $author = new Author();
+        $posts = Post::all();
+
+        /* $author = new Author();
         $date = new Date();
         $from = new FromTo();
 
         $author->setSuccessor($date);
         $date->setSuccessor($from);
-        $author->handle($posts, $data);
+        $author->handle($posts, $data); */
 
-        return Response()->json($from->final, HttpFoundationResponse::HTTP_OK);
+        return Response()->json(PostResource::collection($posts), HttpFoundationResponse::HTTP_OK);
     }
 
     public function createPost($data)
@@ -40,8 +42,8 @@ class PostRepository implements PostRepositoryInterface
         $post = Post::create([
             "title" => $data->title,
             "author_id" => auth()->user()->id,
-            "image" => asset($upload_image),
-            "thumbnail" => asset($upload_thumbnail),
+            "image" => $upload_image,
+            "thumbnail" => $upload_thumbnail,
             "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
             "body" => $data->body,
         ]);
@@ -55,7 +57,7 @@ class PostRepository implements PostRepositoryInterface
     {
         $post = Post::findOrFail($id);
 
-        return response()->json($post, HttpFoundationResponse::HTTP_OK);
+        return response()->json(new PostResource($post), HttpFoundationResponse::HTTP_OK);
     }
 
     public function updatePostById($id, $data)
@@ -70,12 +72,12 @@ class PostRepository implements PostRepositoryInterface
         if($data->has('image')){
             FileDelete::remove($post, "image");
             $upload_image = FileUpload::store($data->file('image'), "image");
-            $post->image = asset(FileUpload::getPath());
+            $post->image = FileUpload::getPath();
         }
         if($data->has('thumbnail')){
             FileDelete::remove($post, "thumbnail");
             $upload_thumbnail = FileUpload::store($data->file('thumbnail'), "thumbnail");
-            $post->thumbnail  = asset(FileUpload::getPath());
+            $post->thumbnail  = FileUpload::getPath();
         }
         if($data->has('title')){
             $post->title = $data->title;
