@@ -12,10 +12,6 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    public function posts()
-    {
-        return $this->hasMany(Post::class);
-    }
     /**
      * The attributes that are mass assignable.
      *
@@ -37,8 +33,10 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
-
-
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 
     public function getJWTIdentifier()
     {

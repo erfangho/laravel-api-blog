@@ -17,7 +17,6 @@ class PostFactory extends Factory
         return [
             //
             "title" => $this->faker->word() . ' blog',
-            "author_id" => User::all()->random()->id,
             "body" => $this->faker->sentence(),
             "image" => $this->faker->imageUrl(),
             "thumbnail" => $this->faker->imageUrl(),
