@@ -4,9 +4,15 @@ namespace App\Services\FileServices;
 
 class FileUpload
 {
+    private static $upload;
     public static function store($data, $type)
     {
-        $fileName = $data->getClientOriginalName();
-        $upload = $data->storeAs('uploads/'. $type . 's', $fileName, 'public');
+        $upload = $data->store('uploads/'. $type . 's', 'public');
+        self::$upload = $upload;
+    }
+
+    public static function getPath()
+    {
+        return 'storage/' . self::$upload;
     }
 }

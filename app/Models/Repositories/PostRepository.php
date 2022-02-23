@@ -32,14 +32,15 @@ class PostRepository implements PostRepositoryInterface
 
     public function createPost($data)
     {
-        $upload_image = FileUpload::store($data->file('image'), "image");
-        $upload_thumbnail = FileUpload::store($data->file('thumbnail'), "thumbnail");
-
+        FileUpload::store($data->file('image'), "image");
+        $upload_image = FileUpload::getPath();
+        FileUpload::store($data->file('thumbnail'), "thumbnail");
+        $upload_thumbnail = FileUpload::getPath();
         $post = Post::create([
             "title" => $data->title,
             "author_id" => auth()->user()->id,
-            "image" => asset('storage/uploads/images/'.$data->file('image')->getClientOriginalName().''),
-            "thumbnail" => asset('storage/uploads/thumbnails/'.$data->file('thumbnail')->getClientOriginalName().''),
+            "image" => asset($upload_image),
+            "thumbnail" => asset($upload_thumbnail),
             "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
             "body" => $data->body,
         ]);
@@ -66,14 +67,14 @@ class PostRepository implements PostRepositoryInterface
         }
 
         if($data->has('image')){
-            $upload_image = FileUpload::store($data->file('image'), "image");
             FileDelete::remove($post, "image");
-            $post->image = asset('storage/uploads/images/'.$data->file('image')->getClientOriginalName().'');
+            $upload_image = FileUpload::store($data->file('image'), "image");
+            $post->image = asset(FileUpload::getPath());
         }
         if($data->has('thumbnail')){
-            $upload_thumbnail = FileUpload::store($data->file('thumbnail'), "thumbnail");
             FileDelete::remove($post, "thumbnail");
-            $post->thumbnail  = asset('storage/uploads/thumbnails/'.$data->file('thumbnail')->getClientOriginalName().'');
+            $upload_thumbnail = FileUpload::store($data->file('thumbnail'), "thumbnail");
+            $post->thumbnail  = asset(FileUpload::getPath());
         }
         if($data->has('title')){
             $post->title = $data->title;
