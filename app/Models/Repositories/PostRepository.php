@@ -65,17 +65,24 @@ class PostRepository implements PostRepositoryInterface
             return Response()->json(["message" => __("auth.unathorized")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
 
-        $upload_image = FileUpload::store($data->file('image'), "image");
-        $upload_thumbnail = FileUpload::store($data->file('thumbnail'), "thumbnail");
+        if($data->has('image')){
+            $upload_image = FileUpload::store($data->file('image'), "image");
+            FileDelete::remove($post, "image");
+            $post->image = asset('storage/uploads/images/'.$data->file('image')->getClientOriginalName().'');
+        }
+        if($data->has('thumbnail')){
+            $upload_thumbnail = FileUpload::store($data->file('thumbnail'), "thumbnail");
+            FileDelete::remove($post, "thumbnail");
+            $post->thumbnail  = asset('storage/uploads/thumbnails/'.$data->file('thumbnail')->getClientOriginalName().'');
+        }
+        if($data->has('title')){
+            $post->title = $data->title;
+        }
+        if($data->has('body')){
+            $post->body  = $data->body;
+        }
 
-        FileDelete::remove($post, "image");
-        FileDelete::remove($post, "thumbnail");
-
-        $post->title = $data->title;
-        $post->image = asset('storage/uploads/images/'.$data->file('image')->getClientOriginalName().'');
-        $post->thumbnail  = asset('storage/uploads/thumbnails/'.$data->file('thumbnail')->getClientOriginalName().'');
-        $post->body  = $data->body;
-        $post->save();
+        $post->update();
 
         return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
     }

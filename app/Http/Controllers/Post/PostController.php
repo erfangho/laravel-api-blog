@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Post;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IndexFilterRequest;
 use App\Http\Requests\PostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Repositories\PostRepositoryInterface;
-use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -33,7 +33,7 @@ class PostController extends Controller
         return $this->repository->showPostById($id);
     }
 
-    public function update(PostRequest $request, $id)
+    public function update(UpdatePostRequest $request, $id)
     {
         return $this->repository->updatePostById($id, $request);
     }

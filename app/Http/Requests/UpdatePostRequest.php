@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
-class PostRequest extends FormRequest
+class UpdatePostRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,7 +18,7 @@ class PostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['bail', new CheckString, 'unique:posts', 'required', 'max:255', 'string'],
+            'title' => ['bail', new CheckString, 'unique:posts', 'max:255', 'string'],
             'image' => 'image',
             'thumbnail' => 'image',
             'body' => 'string',
