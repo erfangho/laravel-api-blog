@@ -11,6 +11,7 @@ use App\Models\Repositories\PostRepositoryInterface;
 use App\Services\FileServices\FileDelete;
 use App\Services\FileServices\FileUpload;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
@@ -61,7 +62,7 @@ class PostRepository implements PostRepositoryInterface
     {
         $post = Post::findOrFail($id);
 
-        if(Auth::id() !== $post->author_id)
+        if(! Gate::allows('update-post', $post))
         {
             return Response()->json(["message" => __("auth.unathorized")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
