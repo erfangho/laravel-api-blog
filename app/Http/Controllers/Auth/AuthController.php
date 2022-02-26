@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignUpRequest;
+use App\Http\Resources\AuthResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -33,7 +33,9 @@ class AuthController extends Controller
         if (!$token = $this->guard()->attempt($validated)) {
             return response()->json(['error' => __("auth.failed")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
-        return $this->respondWithToken($token);
+        $auth = $this->guard();
+        $auth->token = $token;
+        return response()->json(new AuthResource($auth), HttpFoundationResponse::HTTP_OK);
     }
 
     public function logout()
@@ -55,16 +57,5 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->respondWithToken($this->guard()->refresh());
-    }
-
-    protected function respondWithToken($token)
-    {
-        return response()->json(
-            [
-                'token' => $token,
-                'token_type' => 'bearer',
-                'token_validity' => ($this->guard()->factory()->getTTL() * 60),
-            ],
-        HttpFoundationResponse::HTTP_OK);
     }
 }
