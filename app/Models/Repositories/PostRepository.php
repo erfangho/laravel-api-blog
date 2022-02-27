@@ -3,9 +3,6 @@
 namespace App\Models\Repositories;
 
 use App\Events\PostCreated;
-use App\Helpers\Filter\Author;
-use App\Helpers\Filter\Date;
-use App\Helpers\Filter\FromTo;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Models\Repositories\PostRepositoryInterface;
@@ -65,12 +62,12 @@ class PostRepository implements PostRepositoryInterface
 
         if($data->has('image')){
             FileDelete::remove($post, "image");
-            $upload_image = FileUpload::store($data->file('image'), "image");
+            FileUpload::store($data->file('image'), "image");
             $post->image = FileUpload::getPath();
         }
         if($data->has('thumbnail')){
             FileDelete::remove($post, "thumbnail");
-            $upload_thumbnail = FileUpload::store($data->file('thumbnail'), "thumbnail");
+            FileUpload::store($data->file('thumbnail'), "thumbnail");
             $post->thumbnail  = FileUpload::getPath();
         }
         if($data->has('title')){
