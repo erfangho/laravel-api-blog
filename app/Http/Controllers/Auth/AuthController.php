@@ -33,6 +33,7 @@ class AuthController extends Controller
         if (!$token = $this->guard()->attempt($validated)) {
             return response()->json(['error' => __("auth.failed")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
+
         $auth = $this->guard();
         $auth->token = $token;
         return response()->json(new AuthResource($auth), HttpFoundationResponse::HTTP_OK);

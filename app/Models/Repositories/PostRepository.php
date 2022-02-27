@@ -20,15 +20,9 @@ class PostRepository implements PostRepositoryInterface
 {
     public function postFilter($data)
     {
-        $posts = Post::all();
-
-        /* $author = new Author();
-        $date = new Date();
-        $from = new FromTo();
-
-        $author->setSuccessor($date);
-        $date->setSuccessor($from);
-        $author->handle($posts, $data); */
+        $posts = Post::author($data->author_id)
+                       ->fromto($data->from, $data->to)
+                       ->date($data->date)->get();
 
         return Response()->json(PostResource::collection($posts), HttpFoundationResponse::HTTP_OK);
     }
