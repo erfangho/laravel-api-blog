@@ -26,22 +26,22 @@ class PostRepository implements PostRepositoryInterface
 
     public function createPost($data)
     {
-        FileUpload::store($data->file('image'), "image");
+        FileUpload::store($data->file('image'), 'image');
         $upload_image = FileUpload::getPath();
-        FileUpload::store($data->file('thumbnail'), "thumbnail");
+        FileUpload::store($data->file('thumbnail'), 'thumbnail');
         $upload_thumbnail = FileUpload::getPath();
         $post = Post::create([
-            "title" => $data->title,
-            "author_id" => auth()->user()->id,
-            "image" => $upload_image,
-            "thumbnail" => $upload_thumbnail,
-            "publish_time" => Carbon::now()->format('Y-m-d H:i:s'),
-            "body" => $data->body,
+            'title' => $data->title,
+            'author_id' => auth()->user()->id,
+            'image' => $upload_image,
+            'thumbnail' => $upload_thumbnail,
+            'publish_time' => Carbon::now()->format('Y-m-d H:i:s'),
+            'body' => $data->body,
         ]);
 
         event(new PostCreated($post));
 
-        return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
+        return Response()->json(['message' => __('messages.done')], HttpFoundationResponse::HTTP_OK);
     }
 
     public function showPostById($id)
@@ -57,17 +57,17 @@ class PostRepository implements PostRepositoryInterface
 
         if(! Gate::allows('update-post', $post))
         {
-            return Response()->json(["message" => __("auth.unathorized")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
+            return Response()->json(['message' => __('auth.unathorized')], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
 
         if($data->has('image')){
-            FileDelete::remove($post, "image");
-            FileUpload::store($data->file('image'), "image");
+            FileDelete::remove($post, 'image');
+            FileUpload::store($data->file('image'), 'image');
             $post->image = FileUpload::getPath();
         }
         if($data->has('thumbnail')){
-            FileDelete::remove($post, "thumbnail");
-            FileUpload::store($data->file('thumbnail'), "thumbnail");
+            FileDelete::remove($post, 'thumbnail');
+            FileUpload::store($data->file('thumbnail'), 'thumbnail');
             $post->thumbnail  = FileUpload::getPath();
         }
         if($data->has('title')){
@@ -79,7 +79,7 @@ class PostRepository implements PostRepositoryInterface
 
         $post->update();
 
-        return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
+        return Response()->json(['message' => __('messages.done')], HttpFoundationResponse::HTTP_OK);
     }
 
     public function deletePostById($id)
@@ -88,12 +88,12 @@ class PostRepository implements PostRepositoryInterface
 
         if(Auth::id() !== $post->author_id)
         {
-            return Response()->json(["message" => __("auth.unathorized")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
+            return Response()->json(['message' => __('auth.unathorized')], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
 
         $post->delete();
 
-        return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
+        return Response()->json(['message' => __('messages.done')], HttpFoundationResponse::HTTP_OK);
     }
 }
 
