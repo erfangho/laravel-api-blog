@@ -15,6 +15,7 @@ class PostController extends Controller
     public function __construct(PostRepositoryInterface $userRepository)
     {
         $this->middleware('auth:api', ['except' => ['index', 'show']]);
+        $this->middleware('language');
         $this->repository = $userRepository;
     }
 

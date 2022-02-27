@@ -16,6 +16,7 @@ class AuthController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login', 'signUp']]);
+        $this->middleware('language');
     }
 
     public function signUp(SignUpRequest $request)

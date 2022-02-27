@@ -15,7 +15,6 @@ use App\Http\Controllers\Auth\AuthController;
 */
 
 Route::group([
-    'middleware' => ['api', 'language'],
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -25,7 +24,7 @@ Route::group([
     Route::post('signup',  [AuthController::class, 'signUp'])->name('signup');
 });
 
-Route::resource('posts', PostController::class)->except(['create','edit'])->middleware('language');
+Route::resource('posts', PostController::class)->except(['create','edit']);
 
 
 
