@@ -92,6 +92,9 @@ class PostRepository implements PostRepositoryInterface
             return Response()->json(["message" => __("auth.unathorized")], HttpFoundationResponse::HTTP_UNAUTHORIZED);
         }
 
+        FileDelete::remove($post, "image");
+        FileDelete::remove($post, "thumbnail");
+
         $post->delete();
 
         return Response()->json(["message" => __("messages.done")], HttpFoundationResponse::HTTP_OK);
@@ -100,6 +103,7 @@ class PostRepository implements PostRepositoryInterface
     private function getPost($id)
     {
         $post = Post::find($id);
+
         if($post){
             return $post;
         } else {

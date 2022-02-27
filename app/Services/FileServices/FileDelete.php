@@ -3,16 +3,12 @@
 namespace App\Services\FileServices;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 
 class FileDelete
 {
     public static function remove($data, $type)
     {
-        if($type === "image"){
-            File::delete("storage/uploads/images/".basename($data->image));
-        }
-        if($type === "thumbnail"){
-            File::delete("storage/uploads/thumbnails/".basename($data->thumbnail));
-        }
+        File::delete('storage/uploads/'. Str::plural($type) .'/'.basename($data->$type));
     }
 }
