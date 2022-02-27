@@ -17,7 +17,7 @@ class Post extends Model
     }
 
     /**
-     * Scope a query to only include popular users.
+     *
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $date
@@ -31,7 +31,7 @@ class Post extends Model
     }
 
     /**
-     * Scope a query to only include popular users.
+     *
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $from
@@ -46,7 +46,7 @@ class Post extends Model
     }
 
     /**
-     * Scope a query to only include popular users.
+     *
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @param  mixed  $author
