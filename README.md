@@ -48,7 +48,7 @@ Once the development server is running, you can access the system by visiting th
 
 ## Contributing
 
-Contributions to the Charity Aid Allocation System are welcome. If you have any suggestions, bug reports, or would like to contribute to the project, please contact the project maintainer at erfan2ghorbani@gmail.com.
+Contributions to the Laravel Blog project are welcome. If you have any suggestions, bug reports, or would like to contribute to the project, please contact the project maintainer at erfan2ghorbani@gmail.com.
 
 ## License
 
