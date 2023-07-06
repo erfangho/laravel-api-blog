@@ -52,5 +52,5 @@ Contributions to the Charity Aid Allocation System are welcome. If you have any 
 
 ## License
 
-This project is open-source and is licensed under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/). Before using this project for commercial purposes or in business projects, please contact the project maintainer at erfan2ghorbani@gmail.com to obtain proper authorization.
+This project is open-source and does not have any specific licensing requirements.
 
